@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { login } from "../../../backend";
+import { getPersonalityRequest } from "../../../ai";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState<string | undefined>();
@@ -29,6 +30,19 @@ export const LoginScreen = () => {
         className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
       >
         Login
+      </button>
+      <button
+        className={
+          "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        }
+        //TODO: This is a test button, remove it
+        onClick={() =>
+          getPersonalityRequest(
+            "Ma cheam Mihi si sunt programator si im iplace sa scriu cod in React.",
+          )
+        }
+      >
+        AI Test
       </button>
     </div>
   );
