@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
+    "target": "es6",                   // ES6 for broader compatibility in React
+    "lib": ["dom", "dom.iterable", "esnext"],  // Ensure DOM and modern ES libraries
+    "module": "esnext",                // 'esnext' is typical for modern React setups
+    "moduleResolution": "node",        // Node-style resolution for React's imports
+    "jsx": "react-jsx",                // Required for React 17+ JSX transformations
+    "strict": true,                    // Enable all strict type-checking options
+    "esModuleInterop": true,           // Compatibility with CommonJS modules
+    "skipLibCheck": true,              // Skip type checking of declaration files
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "jsx": "react-jsx",
-    "baseUrl": "./src",
+    "allowSyntheticDefaultImports": true,  // Allows default imports from modules with no default export
+    "resolveJsonModule": true,         // Support for importing JSON files
+    "isolatedModules": true,           // Required by CRA for transpilation without type checking
+    "noEmit": true,                    // Prevent TypeScript from emitting files (for development)
+    "baseUrl": "./src",                // Adjust base URL for cleaner imports
     "paths": {
-      "*": ["*"]
+      "*": ["*"]                       // Allows imports to match any path structure
     }
-  }
+  },
+  "include": ["src"],                  // Limit the files included in the compilation
+  "exclude": ["node_modules"]          // Exclude `node_modules` for faster builds
 }
