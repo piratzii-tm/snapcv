@@ -1,1 +1,1 @@
-export {};
+export { SteroidizedTextInput } from "./steroidizedTextInput";
