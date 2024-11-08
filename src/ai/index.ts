@@ -1,3 +1,1 @@
-import { getPersonalityRequest } from "./config";
-
-export { getPersonalityRequest };
+export * from "./config";

@@ -1,7 +1,6 @@
 import { openAiApiKey } from "../constants";
 
-export const getPersonalityRequest = async (cvText: string) => {
-  const AI_KEY = openAiApiKey;
+export const getAiOpinion = async (cvText: string) => {
   console.log("AI START PERSONALITY REQUEST");
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -9,7 +8,7 @@ export const getPersonalityRequest = async (cvText: string) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${AI_KEY}`,
+        Authorization: `Bearer ${openAiApiKey}`,
       },
       body: JSON.stringify({
         model: "gpt-4-turbo-preview",

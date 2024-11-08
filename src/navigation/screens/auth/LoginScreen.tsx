@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { login } from "../../../backend";
-import { getPersonalityRequest } from "../../../ai";
+import { getAiOpinion } from "../../../ai";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState<string | undefined>();
@@ -37,7 +37,7 @@ export const LoginScreen = () => {
         }
         //TODO: This is a test button, remove it
         onClick={() =>
-          getPersonalityRequest(
+          getAiOpinion(
             "Ma cheam Mihi si sunt programator si im iplace sa scriu cod in React.",
           )
         }
