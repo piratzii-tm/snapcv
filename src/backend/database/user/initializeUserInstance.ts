@@ -18,6 +18,6 @@ export const initializeUserInstance = async ({
     email: credentials.user.email,
     firstName,
     lastName,
-    resumes: ["IGNORE"], // represents a list of ids of resumes the user creates
+    resumes: [],
   }).catch(console.log);
 };

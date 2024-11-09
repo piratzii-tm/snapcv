@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { logout } from "../../../backend";
+import { addNewCv, getUserCvs, logout } from "../../../backend";
 import { LinearGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { Paths } from "../../constants";
 
 export const WelcomeScreen = () => {
+  const [resumes, setResumes] = React.useState([]);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    findResumes();
+  }, []);
+
+  const findResumes = async () => {
+    await getUserCvs().then((r) => setResumes(r.val()));
+  };
+
+  const handleAddNewCV = () => {
+    //TODO: Add loading if needed
+    addNewCv()
+      .then((r) => {
+        findResumes();
+        navigate(Paths.resumeMaker);
+      })
+      .catch(console.log);
+  };
+
+  const ResumeCards = () => {
+    return resumes.map((cvId) => (
+      <div key={cvId} className={"flex flex-row h-20 w-20 bg-blue-700"}>
+        <h1>{cvId}</h1>
+      </div>
+    ));
+  };
 
   return (
     <div
@@ -32,12 +60,14 @@ export const WelcomeScreen = () => {
         </LinearGradient>
       </div>
       <div className={"flex w-screen p-14 justify-start gap-3"}>
-        <button
-          className={"border-2 p-2"}
-          onClick={() => navigate(Paths.resumeMaker)}
-        >
+        <button className={"border-2 p-2"} onClick={handleAddNewCV}>
           Add new CV
         </button>
+        {resumes.map((cvId, index) => (
+          <div key={cvId} className={"flex flex-row h-20 w-20 bg-blue-700"}>
+            <h1>CV: {index + 1}</h1>
+          </div>
+        ))}
       </div>
     </div>
   );
