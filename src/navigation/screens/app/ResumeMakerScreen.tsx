@@ -58,7 +58,7 @@ export const ResumeMakerScreen = () => {
           linkedin,
           github,
         },
-        body: {},
+        body: ["IGNORE"],
       }).then(() => setIsLoading(false));
     } else {
       alert("Please fill all the fields");
