@@ -21,19 +21,15 @@ export const WelcomeScreen = () => {
   const handleAddNewCV = () => {
     //TODO: Add loading if needed
     addNewCv()
-      .then((r) => {
+      .then((cvId) => {
         findResumes();
-        navigate(Paths.resumeMaker);
+        navigate(Paths.resumeMaker, { state: { cvId } });
       })
       .catch(console.log);
   };
 
-  const ResumeCards = () => {
-    return resumes.map((cvId) => (
-      <div key={cvId} className={"flex flex-row h-20 w-20 bg-blue-700"}>
-        <h1>{cvId}</h1>
-      </div>
-    ));
+  const handleOpenCV = (cvId: string) => {
+    navigate(Paths.resumeMaker, { state: { cvId } });
   };
 
   return (
@@ -63,11 +59,16 @@ export const WelcomeScreen = () => {
         <button className={"border-2 p-2"} onClick={handleAddNewCV}>
           Add new CV
         </button>
-        {resumes.map((cvId, index) => (
-          <div key={cvId} className={"flex flex-row h-20 w-20 bg-blue-700"}>
-            <h1>CV: {index + 1}</h1>
-          </div>
-        ))}
+        {resumes &&
+          resumes.map((cvId, index) => (
+            <button
+              key={cvId}
+              className={"flex flex-row h-20 w-20 bg-blue-700"}
+              onClick={() => handleOpenCV(cvId)}
+            >
+              <h1>CV: {index + 1}</h1>
+            </button>
+          ))}
       </div>
     </div>
   );

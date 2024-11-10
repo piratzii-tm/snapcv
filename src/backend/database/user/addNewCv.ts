@@ -9,7 +9,7 @@ export const addNewCv = async () => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid;
 
-  await getUserCvs().then((cvIds) => {
+  return await getUserCvs().then((cvIds) => {
     const cvIdLength = cvIds.val() ? cvIds.val().length + 1 : 1;
 
     const newCvId = userId + "CV" + cvIdLength;
@@ -23,5 +23,6 @@ export const addNewCv = async () => {
 
     //Create a new resume instance
     initializeResumeInstance(newCvId).catch(console.log);
+    return newCvId;
   });
 };
