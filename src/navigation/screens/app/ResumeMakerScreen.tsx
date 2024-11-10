@@ -1,12 +1,9 @@
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import {
-  getResume,
-  InitializeResumeInstanceDto,
-  setResume,
-} from "../../../backend";
+import { getResume, setResume } from "../../../backend";
 
 export const ResumeMakerScreen = () => {
+  const [photo, setPhoto] = useState("");
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
@@ -28,6 +25,7 @@ export const ResumeMakerScreen = () => {
       setAddress(res.header?.address);
       setLinkedin(res.header?.linkedin);
       setGithub(res.header?.github);
+      setPhoto(res.header?.photo);
       //Continue with the rest of the fields for the body
     });
   };
@@ -38,10 +36,20 @@ export const ResumeMakerScreen = () => {
   }, []);
 
   const onPressSave = async () => {
-    if (name && title && email && phone && address && linkedin && github) {
+    if (
+      photo &&
+      name &&
+      title &&
+      email &&
+      phone &&
+      address &&
+      linkedin &&
+      github
+    ) {
+      setIsLoading(true);
       await setResume(location.state.cvId, {
         header: {
-          photo: "",
+          photo,
           name,
           title,
           email,
@@ -51,9 +59,20 @@ export const ResumeMakerScreen = () => {
           github,
         },
         body: {},
-      });
+      }).then(() => setIsLoading(false));
     } else {
       alert("Please fill all the fields");
+    }
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPhoto(reader.result as string); // Setam URL-ul imaginii
+      };
+      reader.readAsDataURL(file); // Citește imaginea ca URL base64
     }
   };
 
@@ -65,7 +84,17 @@ export const ResumeMakerScreen = () => {
     >
       <p>Here we shall have a resume maker</p>
       <div className={"flex flex-col gap-2"}>
-        <p>photo: NU E FACUT INCA</p>
+        <div className={"gap-2"}>
+          <p>photo:</p>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {photo !== "" && (
+            <img
+              src={photo}
+              alt="Selected"
+              style={{ maxWidth: 100, marginTop: "20px" }}
+            />
+          )}
+        </div>
         <div className={"flex flex-row gap-2"}>
           <p>name:</p>
           <input
