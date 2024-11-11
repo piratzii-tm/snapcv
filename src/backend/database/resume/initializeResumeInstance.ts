@@ -27,6 +27,6 @@ export const initializeResumeInstance = async (cvId: string) => {
       github: "",
       photo: "",
     },
-    body: ["IGNORE"], // represents a list of ids of resumes the user creates
+    body: ["IGNORE"],
   }).catch(console.log);
 };

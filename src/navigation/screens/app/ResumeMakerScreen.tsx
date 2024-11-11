@@ -3,14 +3,16 @@ import React, { useEffect, useState } from "react";
 import { getResume, setResume } from "../../../backend";
 
 export const ResumeMakerScreen = () => {
-  const [photo, setPhoto] = useState("");
-  const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [github, setGithub] = useState("");
+  const [header, setHeader] = useState({
+    photo: "",
+    name: "",
+    title: "",
+    email: "",
+    phone: "",
+    address: "",
+    linkedin: "",
+    github: "",
+  });
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,15 +20,16 @@ export const ResumeMakerScreen = () => {
 
   const getResultData = async () => {
     await getResume(location.state.cvId).then((res) => {
-      setName(res.header?.name);
-      setTitle(res.header?.title);
-      setEmail(res.header?.email);
-      setPhone(res.header?.phone);
-      setAddress(res.header?.address);
-      setLinkedin(res.header?.linkedin);
-      setGithub(res.header?.github);
-      setPhoto(res.header?.photo);
-      //Continue with the rest of the fields for the body
+      setHeader({
+        photo: res.header?.photo,
+        name: res.header?.name,
+        title: res.header?.title,
+        email: res.header?.email,
+        phone: res.header?.phone,
+        address: res.header?.address,
+        linkedin: res.header?.linkedin,
+        github: res.header?.github,
+      });
     });
   };
 
@@ -37,26 +40,26 @@ export const ResumeMakerScreen = () => {
 
   const onPressSave = async () => {
     if (
-      photo &&
-      name &&
-      title &&
-      email &&
-      phone &&
-      address &&
-      linkedin &&
-      github
+      header.photo !== "" &&
+      header.name !== "" &&
+      header.title !== "" &&
+      header.email !== "" &&
+      header.phone !== "" &&
+      header.address !== "" &&
+      header.linkedin !== "" &&
+      header.github !== ""
     ) {
       setIsLoading(true);
       await setResume(location.state.cvId, {
         header: {
-          photo,
-          name,
-          title,
-          email,
-          phone,
-          address,
-          linkedin,
-          github,
+          photo: header.photo,
+          name: header.name,
+          title: header.title,
+          email: header.email,
+          phone: header.phone,
+          address: header.address,
+          linkedin: header.linkedin,
+          github: header.github,
         },
         body: ["IGNORE"],
       }).then(() => setIsLoading(false));
@@ -70,7 +73,7 @@ export const ResumeMakerScreen = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setPhoto(reader.result as string); // Setam URL-ul imaginii
+        setHeader({ ...header, photo: reader.result as string }); // Setam URL-ul imaginii
       };
       reader.readAsDataURL(file); // Citește imaginea ca URL base64
     }
@@ -87,9 +90,9 @@ export const ResumeMakerScreen = () => {
         <div className={"gap-2"}>
           <p>photo:</p>
           <input type="file" accept="image/*" onChange={handleImageChange} />
-          {photo !== "" && (
+          {header.photo !== "" && (
             <img
-              src={photo}
+              src={header.photo}
               alt="Selected"
               style={{ maxWidth: 100, marginTop: "20px" }}
             />
@@ -99,56 +102,56 @@ export const ResumeMakerScreen = () => {
           <p>name:</p>
           <input
             placeholder={"Name"}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={header.name}
+            onChange={(e) => setHeader({ ...header, name: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>title:</p>
           <input
             placeholder={"Job title"}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={header.title}
+            onChange={(e) => setHeader({ ...header, title: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>email:</p>
           <input
             placeholder={"Email"}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={header.email}
+            onChange={(e) => setHeader({ ...header, email: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>phone number:</p>
           <input
             placeholder={"Phone number"}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            value={header.phone}
+            onChange={(e) => setHeader({ ...header, phone: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>address:</p>
           <input
             placeholder={"Address"}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            value={header.address}
+            onChange={(e) => setHeader({ ...header, address: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>linkedin:</p>
           <input
             placeholder={"Linkedin"}
-            value={linkedin}
-            onChange={(e) => setLinkedin(e.target.value)}
+            value={header.linkedin}
+            onChange={(e) => setHeader({ ...header, linkedin: e.target.value })}
           />
         </div>
         <div className={"flex flex-row gap-2"}>
           <p>github:</p>
           <input
             placeholder={"Github"}
-            value={github}
-            onChange={(e) => setGithub(e.target.value)}
+            value={header.github}
+            onChange={(e) => setHeader({ ...header, github: e.target.value })}
           />
         </div>
       </div>

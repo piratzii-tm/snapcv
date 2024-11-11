@@ -8,6 +8,6 @@ export const setResume = async (
   resumeData: InitializeResumeInstanceDto,
 ) => {
   await set(ref(database, collections.resumes + cvId), resumeData)
-    .then(() => alert("SUCCESS to send"))
-    .catch();
+    .then(() => alert("Data has been saved Successfully"))
+    .catch((e) => console.log(e));
 };

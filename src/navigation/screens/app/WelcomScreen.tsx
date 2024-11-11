@@ -15,7 +15,7 @@ export const WelcomeScreen = () => {
   }, []);
 
   const findResumes = async () => {
-    await getUserCvs().then((r) => setResumes(r.val()));
+    await getUserCvs().then((r) => r !== null && setResumes(r));
   };
 
   const handleAddNewCV = () => {
@@ -66,7 +66,7 @@ export const WelcomeScreen = () => {
               className={"flex flex-row h-20 w-20 bg-blue-700"}
               onClick={() => handleOpenCV(cvId)}
             >
-              <h1>CV: {index + 1}</h1>
+              <h1>Resume: {index + 1}</h1>
             </button>
           ))}
       </div>
