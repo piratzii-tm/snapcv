@@ -26,12 +26,11 @@ export const RegisterScreen = () => {
       style={{
         backgroundImage: `url(${backgroundImage})`,
       }}
-      className="flex justify-center items-center bg-cover bg-center h-screen p-10"
+      className="flex justify-center items-center bg-cover h-screen p-10"
     >
       <div
-        className="flex justify-center flex-col
-      space-y-4 bg-white/80 h-[100%] backdrop-blur-sm rounded-md drop-shadow-md
-      sm:max-md:w-[100%] md:max-[2600px]:w-1/2"
+        className="flex justify-center flex-col space-y-4 bg-white/80 h-[100%]
+        backdrop-blur-sm rounded-md drop-shadow-md sm:max-md:w-[100%] md:max-[2600px]:w-1/2"
       >
         <div className="flex flex-col justify-center space-y-12 self-start p-[10%]">
           <div className="flex items-center space-x-3">
@@ -89,7 +88,7 @@ export const RegisterScreen = () => {
           </div>
           <button
             onClick={handleSubmit}
-            className="p-2 bg-blue-500 text-white rounded"
+            className="p-2 bg-blue-500 text-white rounded drop-shadow-md"
           >
             Register
           </button>
