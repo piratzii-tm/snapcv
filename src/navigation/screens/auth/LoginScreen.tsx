@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { login } from "../../../backend";
-import { getAiOpinion } from "../../../ai";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
