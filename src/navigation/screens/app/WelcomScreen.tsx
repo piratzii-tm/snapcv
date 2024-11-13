@@ -33,14 +33,14 @@ export const WelcomeScreen = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white content-center items-center justify-center">
+    <div className="flex flex-col h-full content-center items-center justify-center">
       <button
         onClick={logout}
         className={
-          "flex items-center justify-center p-4 text-black hover:text-white hover:bg-gradient-to-l " +
+          "flex self-end justify-center items-center p-4 text-black hover:text-white hover:bg-gradient-to-l " +
           "from-[#0de7fa] via-[#079ba5] to-[#1203fa] font-semibold transition-colors " +
           "duration-100 ease-in-out hover:transition-all hover:duration-300" +
-          "shadow-lg rotate-12 absolute top-0 right-0 m-10 text-sm 2xl:text-lg h-10 w-20 2xl:h-14 2xl:w-36"
+          "shadow-lg rotate-12 m-10 text-sm 2xl:text-lg h-10 w-20 2xl:h-14 2xl:w-36"
         }
         style={{
           border: "2px solid",
@@ -51,8 +51,8 @@ export const WelcomeScreen = () => {
         Logout
       </button>
 
-      <div className="flex flex-row items-end gap-2 pb-14">
-        <h1 className="text-lg md:text-xl lg:text-4xl 2xl:text-4xl">
+      <div className="flex flex-row items-end gap-2 p-6 md:pb-20">
+        <h1 className="text-lg md:text-xl lg:text-4xl 2xl:text-3xl">
           Welcome to
         </h1>
         <LinearGradient
@@ -63,7 +63,7 @@ export const WelcomeScreen = () => {
         </LinearGradient>
       </div>
 
-      <div className="flex items-center w-screen p-14 justify-start gap-3 2xl:gap-5">
+      <div className="flex flex-col md:flex-row items-center w-screen justify-start gap-5 flex-wrap md:pl-16">
         <button
           className="flex justify-center items-center text-black hover:text-white
           hover:bg-gradient-to-l h-12 w-12 p-5 from-[#0de7fa] via-[#079ba5] to-[#1203fa]
@@ -83,7 +83,7 @@ export const WelcomeScreen = () => {
           resumes.map((cvId, index) => (
             <button
               key={cvId}
-              className="relative flex items-center justify-center h-16 w-16
+              className="relative flex items-center justify-center h-24 w-24
               bg-cover bg-center overflow-hidden shadow-lg 2xl:h-40 2xl:w-40"
               style={{ backgroundImage: `url(${buttonImage})` }}
               onClick={() => handleOpenCV(cvId)}
