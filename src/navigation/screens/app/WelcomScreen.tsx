@@ -45,7 +45,6 @@ export const WelcomeScreen = () => {
         style={{
           border: "2px solid",
           borderImage: "linear-gradient(to left, #0de7fa, #079ba5, #1203fa) 1",
-          borderRadius: 6,
         }}
       >
         Logout
@@ -74,7 +73,6 @@ export const WelcomeScreen = () => {
             border: "2px solid",
             borderImage:
               "linear-gradient(to left, #0de7fa, #079ba5, #1203fa) 1",
-            borderRadius: 6,
           }}
         >
           +
