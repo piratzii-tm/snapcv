@@ -62,7 +62,7 @@ export const WelcomeScreen = () => {
         </LinearGradient>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center w-screen justify-start gap-5 flex-wrap md:pl-16">
+      <div className="flex flex-col md:flex-row items-center w-screen justify-start gap-5 flex-wrap md:pl-16 mb-6 2xl:mb-0">
         <button
           className="flex justify-center items-center text-black hover:text-white
           hover:bg-gradient-to-l h-12 w-12 p-5 from-[#0de7fa] via-[#079ba5] to-[#1203fa]

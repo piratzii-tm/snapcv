@@ -1,6 +1,12 @@
 import { useLocation } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getResume, setResume } from "../../../backend";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const ResumeMakerScreen = () => {
   const [header, setHeader] = useState({
@@ -17,6 +23,8 @@ export const ResumeMakerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
+
+  const defaultImage = require("../../../resources/auth_bg_img.png");
 
   const getResultData = async () => {
     await getResume(location.state.cvId).then((res) => {
@@ -79,85 +87,109 @@ export const ResumeMakerScreen = () => {
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   return !isLoading ? (
-    <div
-      className={
-        "flex flex-col content-center items-center justify-center gap-2"
-      }
-    >
-      <p>Here we shall have a resume maker</p>
-      <div className={"flex flex-col gap-2"}>
-        <div className={"gap-2"}>
-          <p>photo:</p>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {header.photo !== "" && (
-            <img
-              src={header.photo}
-              alt="Selected"
-              style={{ maxWidth: 100, marginTop: "20px" }}
+    <div className="flex h-full w-fit 2xl:w-full justify-center overflow-scroll">
+      <div
+        className={
+          "flex flex-col self-end gap-2 h-[297mm] w-[210mm] border-black border" // h-[297mm] w-[210mm] - dimensiunile standard pentru A4
+        }
+      >
+        <div className={"flex gap-2"}>
+          <div className={"flex items-start w-6/12"}>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleImageChange}
             />
-          )}
+            <img
+              src={header.photo || defaultImage}
+              alt="Selected"
+              onClick={() => fileInputRef.current?.click()}
+              className="h-40 w-40 rounded-full mt-10 ml-10 mb-10"
+            />
+            <div className="flex flex-col mt-12 ml-10 mb-10">
+              <input
+                placeholder={"Name..."}
+                value={header.name}
+                onChange={(e) => setHeader({ ...header, name: e.target.value })}
+                className="text-2xl font-semibold"
+              />
+              <input
+                placeholder={"Job title..."}
+                value={header.title}
+                onChange={(e) =>
+                  setHeader({ ...header, title: e.target.value })
+                }
+                className="text-base"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col items-end w-6/12 mt-12 mr-10 mb-10 gap-3">
+            <div className="flex gap-3">
+              <input
+                placeholder={"Email..."}
+                value={header.email}
+                onChange={(e) =>
+                  setHeader({ ...header, email: e.target.value })
+                }
+                className="text-right text-sm"
+              />
+              <FontAwesomeIcon icon={faEnvelope} />
+            </div>
+            <div className="flex gap-3">
+              <input
+                placeholder={"Phone number..."}
+                value={header.phone}
+                onChange={(e) =>
+                  setHeader({ ...header, phone: e.target.value })
+                }
+                className="text-right text-sm"
+              />
+              <FontAwesomeIcon icon={faPhone} />
+            </div>
+            <div className="flex gap-3">
+              <input
+                placeholder={"Address..."}
+                value={header.address}
+                onChange={(e) =>
+                  setHeader({ ...header, address: e.target.value })
+                }
+                className="text-right text-sm"
+              />
+              <FontAwesomeIcon icon={faLocationDot} />
+            </div>
+            <div className="flex gap-3">
+              <input
+                placeholder={"Linkedin..."}
+                value={header.linkedin}
+                onChange={(e) =>
+                  setHeader({ ...header, linkedin: e.target.value })
+                }
+                className="text-right text-sm"
+              />
+              <FontAwesomeIcon icon={faLinkedin} />
+            </div>
+            <div className="flex gap-3">
+              <input
+                placeholder={"Github..."}
+                value={header.github}
+                onChange={(e) =>
+                  setHeader({ ...header, github: e.target.value })
+                }
+                className="text-right text-sm"
+              />
+              <FontAwesomeIcon icon={faGithub} />
+            </div>
+          </div>
         </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>name:</p>
-          <input
-            placeholder={"Name"}
-            value={header.name}
-            onChange={(e) => setHeader({ ...header, name: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>title:</p>
-          <input
-            placeholder={"Job title"}
-            value={header.title}
-            onChange={(e) => setHeader({ ...header, title: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>email:</p>
-          <input
-            placeholder={"Email"}
-            value={header.email}
-            onChange={(e) => setHeader({ ...header, email: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>phone number:</p>
-          <input
-            placeholder={"Phone number"}
-            value={header.phone}
-            onChange={(e) => setHeader({ ...header, phone: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>address:</p>
-          <input
-            placeholder={"Address"}
-            value={header.address}
-            onChange={(e) => setHeader({ ...header, address: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>linkedin:</p>
-          <input
-            placeholder={"Linkedin"}
-            value={header.linkedin}
-            onChange={(e) => setHeader({ ...header, linkedin: e.target.value })}
-          />
-        </div>
-        <div className={"flex flex-row gap-2"}>
-          <p>github:</p>
-          <input
-            placeholder={"Github"}
-            value={header.github}
-            onChange={(e) => setHeader({ ...header, github: e.target.value })}
-          />
-        </div>
+        <button className={"p-2 bg-green-700"} onClick={onPressSave}>
+          SAVE
+        </button>
       </div>
-      <button className={"p-2 bg-green-700"} onClick={onPressSave}>
-        SAVE
-      </button>
     </div>
   ) : (
     <div>Loading...</div>
