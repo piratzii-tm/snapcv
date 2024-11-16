@@ -90,10 +90,10 @@ export const ResumeMakerScreen = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return !isLoading ? (
-    <div className="flex h-full justify-center overflow-x-auto">
+    <div className="flex h-full w-fit 2xl:w-full justify-center overflow-scroll">
       <div
         className={
-          "flex flex-col self-end gap-2 h-[297mm] w-[210mm] border-black border"
+          "flex flex-col self-end gap-2 h-[297mm] w-[210mm] border-black border" // h-[297mm] w-[210mm] - dimensiunile standard pentru A4
         }
       >
         <div className={"flex gap-2"}>
@@ -116,7 +116,7 @@ export const ResumeMakerScreen = () => {
                 placeholder={"Name..."}
                 value={header.name}
                 onChange={(e) => setHeader({ ...header, name: e.target.value })}
-                className="text-xl font-semibold"
+                className="text-2xl font-semibold"
               />
               <input
                 placeholder={"Job title..."}
@@ -138,7 +138,7 @@ export const ResumeMakerScreen = () => {
                 }
                 className="text-right text-sm"
               />
-              <FontAwesomeIcon icon={faEnvelope} size="lg" />
+              <FontAwesomeIcon icon={faEnvelope} />
             </div>
             <div className="flex gap-3">
               <input
@@ -149,7 +149,7 @@ export const ResumeMakerScreen = () => {
                 }
                 className="text-right text-sm"
               />
-              <FontAwesomeIcon icon={faPhone} size="lg" />
+              <FontAwesomeIcon icon={faPhone} />
             </div>
             <div className="flex gap-3">
               <input
@@ -160,7 +160,7 @@ export const ResumeMakerScreen = () => {
                 }
                 className="text-right text-sm"
               />
-              <FontAwesomeIcon icon={faLocationDot} size="lg" />
+              <FontAwesomeIcon icon={faLocationDot} />
             </div>
             <div className="flex gap-3">
               <input
@@ -171,7 +171,7 @@ export const ResumeMakerScreen = () => {
                 }
                 className="text-right text-sm"
               />
-              <FontAwesomeIcon icon={faLinkedin} size="lg" />
+              <FontAwesomeIcon icon={faLinkedin} />
             </div>
             <div className="flex gap-3">
               <input
@@ -182,7 +182,7 @@ export const ResumeMakerScreen = () => {
                 }
                 className="text-right text-sm"
               />
-              <FontAwesomeIcon icon={faGithub} size="lg" />
+              <FontAwesomeIcon icon={faGithub} />
             </div>
           </div>
         </div>
