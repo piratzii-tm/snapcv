@@ -81,7 +81,7 @@ export const WelcomeScreen = () => {
           resumes.map((cvId, index) => (
             <button
               key={cvId}
-              className="relative flex items-center justify-center h-24 w-24
+              className="relative flex items-center justify-center h-96 w-64
               bg-cover bg-center overflow-hidden shadow-lg 2xl:h-40 2xl:w-40"
               style={{ backgroundImage: `url(${buttonImage})` }}
               onClick={() => handleOpenCV(cvId)}

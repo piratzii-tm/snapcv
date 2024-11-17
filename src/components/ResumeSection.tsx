@@ -10,15 +10,17 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 export const ResumeSection = ({
   content,
   onDeleteSection,
+  updateSection,
 }: {
   content: SectionModel;
   onDeleteSection: () => void;
+  updateSection: (section: SectionModel) => void;
 }) => {
   const [section, setSection] = useState(content);
-  const [editing, setEditing] = useState(section.subsections.map(() => false));
+  const [editing, setEditing] = useState<boolean[]>([]);
 
   const onFieldChange = (object: any, currentIndex: number) => {
-    let subsections = section.subsections.map((sb, sbind) => {
+    let subsections = section?.subsections.map((sb, sbind) => {
       if (sbind === currentIndex) {
         return {
           ...sb,
@@ -28,18 +30,15 @@ export const ResumeSection = ({
       return sb;
     });
     setSection({ ...section, subsections });
+    updateSection({ ...section, subsections });
   };
 
   useEffect(() => {
     setEditing([...editing, false]);
-  }, [section.subsections.length]);
-
-  useEffect(() => {
-    console.log(editing);
-  }, [editing]);
+  }, [section.subsections?.length]);
 
   return (
-    <div className={"p-5 w-1/2 max-h-fit flex-1"}>
+    <div className={"p-5 min-w-[100mm] max-w-[100mm] max-h-fit flex-1"}>
       <div className={"flex flex-row gap-1 items-center"}>
         <input
           placeholder={"Section title ..."}
@@ -47,15 +46,19 @@ export const ResumeSection = ({
           className={
             "text-3xl font-bold pb-1 border-b-blue-900 border-b-2 w-full"
           }
-          onChange={(e) => setSection({ ...section, title: e.target.value })}
+          onChange={(e) => {
+            setSection({ ...section, title: e.target.value });
+            updateSection({ ...section, title: e.target.value });
+          }}
         />
         <FontAwesomeIcon
           icon={faTrash}
           color={"#dc9292"}
           onClick={onDeleteSection}
+          data-ignore="true"
         />
       </div>
-      {section.subsections.map((subsection, index) => (
+      {section.subsections?.map((subsection, index) => (
         <div className={"mt-5"}>
           <input
             value={subsection.title}
@@ -71,14 +74,17 @@ export const ResumeSection = ({
               ); // Exclude matching 'id'
               setSection({ ...section, subsections: newSubsections });
             }}
+            data-ignore="true"
           />
           <div className={"pl-2 border-l-2 "}>
-            <div className={"flex flex-row"}>
+            <div className={"flex flex-row h-5"}>
               <DatePicker
                 selected={moment(subsection.from).toDate()}
                 value={moment(subsection.from).format("DD/MM/YYYY")}
                 onChange={(date) => onFieldChange({ from: date }, index)}
-                className={"text-sm italic text-gray-500 max-w-20"}
+                className={
+                  "text-md italic text-gray-500 max-w-24  overflow-visible"
+                }
               />
               <p className={"mr-2 italic text-gray-500 "}>-</p>
               <DatePicker
@@ -89,7 +95,9 @@ export const ResumeSection = ({
                     : moment(subsection.to).format("DD/MM/YYYY")
                 }
                 onChange={(date) => onFieldChange({ to: date }, index)}
-                className={"text-sm italic text-gray-500 max-w-15"}
+                className={
+                  "text-md italic text-gray-500 max-w-24  overflow-visible"
+                }
               />
             </div>
             <div className={"max-h-fit pe-3"}>
@@ -123,11 +131,30 @@ export const ResumeSection = ({
           setSection({
             ...section,
             subsections: [
-              ...section.subsections,
+              ...(section.subsections ?? []),
               {
                 id:
-                  section.subsections.length > 0
-                    ? section.subsections[section.subsections.length - 1].id + 1
+                  section.subsections && section.subsections?.length > 0
+                    ? section?.subsections[section.subsections.length - 1].id +
+                      1
+                    : 0,
+
+                title: "Title",
+                description: "<p>Add your description...</p>",
+                from: new Date(),
+                to: new Date(),
+              },
+            ],
+          });
+          updateSection({
+            ...section,
+            subsections: [
+              ...(section.subsections ?? []),
+              {
+                id:
+                  section.subsections && section.subsections?.length > 0
+                    ? section?.subsections[section.subsections.length - 1].id +
+                      1
                     : 0,
 
                 title: "Title",
