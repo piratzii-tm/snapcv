@@ -1,54 +1,30 @@
-import React from "react";
-
+import React, { useEffect, useRef } from "react";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 
 export const SteroidizedTextInput = ({
   text,
   setText,
-  htmlText,
-  setHtmlText,
-  height,
-  width,
-  onSave,
+  clickOutside,
 }: {
   text: string;
-  setText: (text: string) => void;
-  htmlText: string;
-  setHtmlText: (htmlText: string) => void;
-  height: number;
-  width: number;
-  onSave: () => void;
+  setText: (htmlText: string) => void;
+  clickOutside: () => void;
 }) => {
-  //Remove this lines if you want all the options
+  const divRef = useRef<HTMLDivElement>(null);
+
+  // Configuration options
   const theme = "snow";
   const modules = {
     toolbar: [
       ["bold", "italic", "underline", "strike"],
-
       [{ list: "ordered" }, { list: "bullet" }],
-
-      [{ size: ["small", false, "large", "huge"] }],
-      [{ color: [] }, { background: [] }],
     ],
   };
-  const placeholder = "Compose an epic...";
-  const formats = [
-    //For text
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    //For lists
-    "list",
-    //For size
-    "size",
-    "header",
-    //For color
-    "color",
-    "background",
-  ];
+  const placeholder = "Describe your experience, achievements and skills...";
+  const formats = ["bold", "italic", "underline", "strike", "list"];
 
+  // Initialize Quill with useQuill hook
   const { quill, quillRef } = useQuill({
     theme,
     modules,
@@ -56,39 +32,39 @@ export const SteroidizedTextInput = ({
     placeholder,
   });
 
-  //On text change
-  React.useEffect(() => {
+  // Sync external `text` prop with Quill editor
+  useEffect(() => {
+    if (quill && text !== quill.root.innerHTML) {
+      quill.root.innerHTML = text; // Update the editor content
+    }
+  }, [quill, text]);
+
+  // Capture changes in the Quill editor and update the `setText` prop
+  useEffect(() => {
     if (quill) {
       quill.on("text-change", () => {
-        //Leave this just in case
-        // console.log(quill.getText()); // Get text only
-        // console.log(quill.getContents()); // Get delta contents
-        // console.log(quill.root.innerHTML); // Get innerHTML using quill
-        // console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
-        setHtmlText(quillRef.current.firstChild.innerHTML);
-        setText(quill.getText());
+        setText(quill.root.innerHTML); // Send updated content to parent
       });
     }
-  }, [quill]);
+  }, [quill, setText]);
 
-  console.log("TEXT: ", text);
-  console.log("HTML TEXT: ", htmlText);
+  // Handle clicks outside the component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (divRef.current && !divRef.current.contains(event.target as Node)) {
+        clickOutside(); // Invoke the clickOutside callback
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [clickOutside]);
 
   return (
-    <div style={{ width: width, height: height }}>
+    <div className="max-h-fit" ref={divRef}>
       <div ref={quillRef} />
-      <button
-        style={{
-          color: "white",
-          background: "green",
-          padding: 10,
-          borderRadius: 50,
-          marginTop: 5,
-        }}
-        onClick={onSave}
-      >
-        Save changes
-      </button>
     </div>
   );
 };
