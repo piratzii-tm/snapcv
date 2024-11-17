@@ -7,6 +7,9 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SectionModel } from "../../../constants";
+import { ResumeSection } from "../../../components";
+import { isEqual } from "lodash";
 
 export const ResumeMakerScreen = () => {
   const [header, setHeader] = useState({
@@ -19,12 +22,20 @@ export const ResumeMakerScreen = () => {
     linkedin: "",
     github: "",
   });
+  const [sections, setSections] = useState<SectionModel[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const defaultImage = require("../../../resources/auth_bg_img.png");
+
+  useEffect(() => {
+    setIsLoading(true);
+    getResultData().then(() => setIsLoading(false));
+  }, []);
 
   const getResultData = async () => {
     await getResume(location.state.cvId).then((res) => {
@@ -40,11 +51,6 @@ export const ResumeMakerScreen = () => {
       });
     });
   };
-
-  useEffect(() => {
-    setIsLoading(true);
-    getResultData().then(() => setIsLoading(false));
-  }, []);
 
   const onPressSave = async () => {
     if (
@@ -81,22 +87,50 @@ export const ResumeMakerScreen = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setHeader({ ...header, photo: reader.result as string }); // Setam URL-ul imaginii
+        setHeader({ ...header, photo: reader.result as string });
       };
-      reader.readAsDataURL(file); // Citește imaginea ca URL base64
+      reader.readAsDataURL(file);
     }
   };
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleAddSection = () => {
+    setSections([
+      ...sections,
+      {
+        id: sections.length > 0 ? sections[sections.length - 1].id + 1 : 0,
+        title: "Title",
+        subsections: [],
+      },
+    ]);
+  };
 
   return !isLoading ? (
-    <div className="flex h-full w-fit 2xl:w-full justify-center overflow-scroll">
+    <div className="flex-1 w-screen h-full justify-items-center p-10 bg-blue-50  ">
+      <div className={"fixed top-0 left-0 m-4 flex flex-col gap-5"}>
+        <button
+          onClick={onPressSave}
+          className={
+            "bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-600 w-fit"
+          }
+        >
+          Save
+        </button>
+        <button
+          onClick={handleAddSection}
+          className={
+            "bg-orange-300 text-white py-2 px-4 rounded shadow-lg hover:bg-orange-600 w-fit"
+          }
+        >
+          Add another section
+        </button>
+      </div>
+
       <div
-        className={
-          "flex flex-col self-end gap-2 h-[297mm] w-[210mm] border-black border" // h-[297mm] w-[210mm] - dimensiunile standard pentru A4
-        }
+        className={"flex flex-col self-end gap-2 h-[297mm] w-[210mm] bg-white"}
       >
-        <div className={"flex gap-2"}>
+        {/*TODO Move to a separate component*/}
+        {/*#region - ResumeHeader*/}
+        <div className={"flex gap-2 border-b-2 border-b-blue-900"}>
           <div className={"flex items-start w-6/12"}>
             <input
               type="file"
@@ -116,7 +150,7 @@ export const ResumeMakerScreen = () => {
                 placeholder={"Name..."}
                 value={header.name}
                 onChange={(e) => setHeader({ ...header, name: e.target.value })}
-                className="text-2xl font-semibold"
+                className="text-2xl font-semibold "
               />
               <input
                 placeholder={"Job title..."}
@@ -186,9 +220,19 @@ export const ResumeMakerScreen = () => {
             </div>
           </div>
         </div>
-        <button className={"p-2 bg-green-700"} onClick={onPressSave}>
-          SAVE
-        </button>
+        {/*endregion*/}
+        {sections.map((section, index) => (
+          <ResumeSection
+            key={section.id}
+            content={section}
+            onDeleteSection={() => {
+              const newSections = sections.filter(
+                (sec) => sec.id !== section.id,
+              ); // Exclude matching 'id'
+              setSections(newSections);
+            }}
+          />
+        ))}
       </div>
     </div>
   ) : (

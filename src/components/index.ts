@@ -1,1 +1,2 @@
-export { SteroidizedTextInput } from "./SteroidizedTextInput";
+export * from "./SteroidizedTextInput";
+export * from "./ResumeSection";
