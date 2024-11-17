@@ -260,7 +260,7 @@ export const ResumeMakerScreen = () => {
                 placeholder={"Name..."}
                 value={header.name}
                 onChange={(e) => setHeader({ ...header, name: e.target.value })}
-                className="text-2xl font-semibold "
+                className="text-3xl font-semibold text-blue-900"
               />
               <input
                 placeholder={"Job title..."}
@@ -268,7 +268,7 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, title: e.target.value })
                 }
-                className="text-base"
+                className="text-base text-gray-800 font-semibold"
               />
             </div>
           </div>
@@ -280,9 +280,9 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, email: e.target.value })
                 }
-                className="text-right text-lg"
+                className="text-right text-lg text-gray-800"
               />
-              <FontAwesomeIcon icon={faEnvelope} />
+              <FontAwesomeIcon icon={faEnvelope} color={"#1f2937"} />
             </div>
             <div className="flex gap-3 flex-row items-center">
               <input
@@ -291,9 +291,9 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, phone: e.target.value })
                 }
-                className="text-right text-lg"
+                className="text-right text-lg text-gray-800"
               />
-              <FontAwesomeIcon icon={faPhone} />
+              <FontAwesomeIcon icon={faPhone} color={"#1f2937"} />
             </div>
             <div className="flex gap-3 flex-row items-center">
               <input
@@ -302,9 +302,9 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, address: e.target.value })
                 }
-                className="text-right text-lg"
+                className="text-right text-lg text-gray-800"
               />
-              <FontAwesomeIcon icon={faLocationDot} />
+              <FontAwesomeIcon icon={faLocationDot} color={"#1f2937"} />
             </div>
             <div className="flex gap-3 flex-row items-center">
               <input
@@ -313,9 +313,9 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, linkedin: e.target.value })
                 }
-                className="text-right text-lg"
+                className="text-right text-lg text-gray-800"
               />
-              <FontAwesomeIcon icon={faLinkedin} />
+              <FontAwesomeIcon icon={faLinkedin} color={"#1f2937"} />
             </div>
             <div className="flex gap-3 flex-row items-center">
               <input
@@ -324,9 +324,9 @@ export const ResumeMakerScreen = () => {
                 onChange={(e) =>
                   setHeader({ ...header, github: e.target.value })
                 }
-                className="text-right text-lg"
+                className="text-right text-lg text-gray-8"
               />
-              <FontAwesomeIcon icon={faGithub} />
+              <FontAwesomeIcon icon={faGithub} color={"#1f2937"} />
             </div>
           </div>
         </div>

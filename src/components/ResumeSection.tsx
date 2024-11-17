@@ -44,7 +44,7 @@ export const ResumeSection = ({
           placeholder={"Section title ..."}
           value={section.title}
           className={
-            "text-3xl font-bold pb-1 border-b-blue-900 border-b-2 w-full"
+            "text-3xl font-bold pb-1 border-b-blue-900 border-b-2 w-full text-blue-900"
           }
           onChange={(e) => {
             setSection({ ...section, title: e.target.value });
@@ -53,7 +53,7 @@ export const ResumeSection = ({
         />
         <FontAwesomeIcon
           icon={faTrash}
-          color={"#dc9292"}
+          color={"#444557"}
           onClick={onDeleteSection}
           data-ignore="true"
         />
@@ -63,11 +63,11 @@ export const ResumeSection = ({
           <input
             value={subsection.title}
             onChange={(e) => onFieldChange({ title: e.target.value }, index)}
-            className={"text-2xl font-semibold"}
+            className={"text-2xl font-semibold text-blue-900"}
           />
           <FontAwesomeIcon
             icon={faTrash}
-            color={"#dc9292"}
+            color={"#444557"}
             onClick={() => {
               const newSubsections = section.subsections.filter(
                 (subsec) => subsec.id !== subsection.id,
@@ -76,7 +76,7 @@ export const ResumeSection = ({
             }}
             data-ignore="true"
           />
-          <div className={"pl-2 border-l-2 "}>
+          <div className={"pl-2 border-l-2 mt-2"}>
             <div className={"flex flex-row h-5"}>
               <DatePicker
                 selected={moment(subsection.from).toDate()}
@@ -86,7 +86,7 @@ export const ResumeSection = ({
                   "text-md italic text-gray-500 max-w-24  overflow-visible"
                 }
               />
-              <p className={"mr-2 italic text-gray-500 "}>-</p>
+              <p className={"mr-4 italic text-gray-500 "}>-</p>
               <DatePicker
                 selected={moment(subsection.from).toDate()}
                 value={
@@ -100,13 +100,14 @@ export const ResumeSection = ({
                 }
               />
             </div>
-            <div className={"max-h-fit pe-3"}>
+            <div className={"max-h-fit pe-3 mt-2"}>
               {!editing[index] && (
                 <div
                   onClick={() =>
                     setEditing(editing.map((el, elin) => elin === index && !el))
                   }
                   dangerouslySetInnerHTML={{ __html: subsection.description }}
+                  className={"text-gray-800"}
                 />
               )}
               {editing[index] && (

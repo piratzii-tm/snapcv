@@ -3,6 +3,8 @@ import { addNewCv, getUserCvs, logout } from "../../../backend";
 import { LinearGradient } from "react-text-gradients";
 import { useNavigate } from "react-router-dom";
 import { Paths } from "../../constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
 
 export const WelcomeScreen = () => {
   const [resumes, setResumes] = React.useState([]);
@@ -62,12 +64,12 @@ export const WelcomeScreen = () => {
         </LinearGradient>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center w-screen justify-start gap-5 flex-wrap md:pl-16 mb-6 2xl:mb-0">
+      <div className="flex flex-col md:flex-row items-center w-screen justify-start gap-5 flex-wrap md:pl-16 ">
         <button
-          className="flex justify-center items-center text-black hover:text-white
-          hover:bg-gradient-to-l h-12 w-12 p-5 from-[#0de7fa] via-[#079ba5] to-[#1203fa]
+          className="flex justify-center p-4 items-center text-gray-800 hover:text-white
+          hover:bg-gradient-to-l  from-[#0de7fa] via-[#079ba5] to-[#1203fa]
           transition-colors duration-100 ease-in-out hover:transition-all
-          hover:duration-300 shadow-lg text-2xl 2xl:h-20 2xl:w-20"
+          hover:duration-300 shadow-lg text-2xl 2xl:h-20 2xl:w-20 "
           onClick={handleAddNewCV}
           style={{
             border: "2px solid",
@@ -75,7 +77,7 @@ export const WelcomeScreen = () => {
               "linear-gradient(to left, #0de7fa, #079ba5, #1203fa) 1",
           }}
         >
-          +
+          <FontAwesomeIcon icon={faAdd} />
         </button>
         {resumes &&
           resumes.map((cvId, index) => (
