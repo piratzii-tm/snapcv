@@ -42,7 +42,8 @@ export const ResumeMakerScreen = () => {
   const getResultData = async () => {
     await getResume(location.state.cvId).then((res) => {
       console.log(Object.values(res.body), Object.values(res.body)[0]);
-      setSections(Object.values(res.body));
+      const sects = Object.values(res.body).slice(1) as SectionModel[];
+      setSections(sects);
       setHeader({
         photo: res.header?.photo,
         name: res.header?.name,
@@ -67,7 +68,6 @@ export const ResumeMakerScreen = () => {
       header.github !== ""
     ) {
       setIsLoading(true);
-      console.log(sections);
       await setResume(location.state.cvId, {
         header: {
           photo: header.photo,
@@ -332,7 +332,7 @@ export const ResumeMakerScreen = () => {
         </div>
         {/*endregion*/}
         <div className={"flex flex-row flex-wrap"}>
-          {sections &&
+          {sections.slice(1) &&
             sections?.map((section, index) => (
               <ResumeSection
                 key={section.id}
