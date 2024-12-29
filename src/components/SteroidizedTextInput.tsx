@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
+import { getAiOpinion } from "../ai";
 
 export const SteroidizedTextInput = ({
   text,
@@ -22,12 +23,14 @@ export const SteroidizedTextInput = ({
     ],
   };
   const placeholder = "Describe your experience, achievements and skills...";
-  const formats = ["bold", "italic", "underline", "strike", "list"];
+  const formats = ["bold", "italic", "underline", "strike", "list", "script"];
 
   // Initialize Quill with useQuill hook
   const { quill, quillRef } = useQuill({
     theme,
-    modules,
+    modules: {
+      toolbar: "#toolbar",
+    },
     formats,
     placeholder,
   });
@@ -65,6 +68,32 @@ export const SteroidizedTextInput = ({
   return (
     <div className="max-h-fit" ref={divRef}>
       <div ref={quillRef} />
+
+      <div id="toolbar">
+        <button className="ql-bold" />
+        <button className="ql-italic" />
+        <button className="ql-underline" />
+        <button className="ql-strike" />
+        <button className="ql-list" value="ordered" />
+        <button className="ql-list" value="bullet" />
+        {text !== "<p>Add your description...</p>" && (
+          <p
+            onClick={() => {
+              setText("Please wait, loading...");
+              getAiOpinion(text).then((response) => {
+                setText(response);
+                if (quill) {
+                  quill.root.innerHTML = response;
+                }
+              });
+            }}
+            className="hover:cursor-pointer scale-125"
+          >
+            🤖
+          </p>
+        )}
+      </div>
+      <div id="editor" />
     </div>
   );
 };

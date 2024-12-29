@@ -1,7 +1,9 @@
 import { openAiApiKey } from "../constants";
 
+const getPrompt = (userText: string) =>
+  `I have a resume and I want to improve my text. I will provide you the text I have written. Regarding of the language, please provide an enhanced version of my text. My version of the text is ${userText}. Please provide the answer as a simple string of maximum 300 characters (including whitespaces) in the language my text was provided.`;
+
 export const getAiOpinion = async (cvText: string) => {
-  console.log("AI START PERSONALITY REQUEST");
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -17,7 +19,7 @@ export const getAiOpinion = async (cvText: string) => {
         messages: [
           {
             role: "user",
-            content: `Am scris asta in CV: ${cvText}, poti sa o faci mai bine? Scrie doar raspunsul, fara alte adaugiri.`,
+            content: getPrompt(cvText),
           },
         ],
       }),
@@ -29,7 +31,7 @@ export const getAiOpinion = async (cvText: string) => {
 
     return jsonResponse.choices[0].message.content;
   } catch (error) {
-    console.log("PERSONALITY REQUEST ERROR: ", error);
-    return "ERROR: SOMETHING WENT WRONG";
+    console.log("REQUEST ERROR: ", error);
+    throw Error("Something went wrong with the request");
   }
 };
