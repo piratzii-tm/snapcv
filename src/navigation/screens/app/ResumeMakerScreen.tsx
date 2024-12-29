@@ -1,6 +1,6 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
-import { getResume, setResume } from "../../../backend";
+import { deleteResume, getResume, setResume } from "../../../backend";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import { ResumeSection } from "../../../components";
 import { isEqual } from "lodash";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { Paths } from "../../constants";
 
 export const ResumeMakerScreen = () => {
   const [header, setHeader] = useState({
@@ -26,11 +27,15 @@ export const ResumeMakerScreen = () => {
   });
   const [sections, setSections] = useState<SectionModel[]>([]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
 
   const defaultImage = require("../../../resources/auth_bg_img.png");
 
@@ -41,19 +46,21 @@ export const ResumeMakerScreen = () => {
 
   const getResultData = async () => {
     await getResume(location.state.cvId).then((res) => {
-      console.log(Object.values(res.body), Object.values(res.body)[0]);
-      const sects = Object.values(res.body).slice(1) as SectionModel[];
-      setSections(sects);
-      setHeader({
-        photo: res.header?.photo,
-        name: res.header?.name,
-        title: res.header?.title,
-        email: res.header?.email,
-        phone: res.header?.phone,
-        address: res.header?.address,
-        linkedin: res.header?.linkedin,
-        github: res.header?.github,
-      });
+      if (res && res.body) {
+        console.log(Object.values(res.body), Object.values(res.body)[0]);
+        const sects = Object.values(res.body).slice(0) as SectionModel[];
+        setSections(sects);
+        setHeader({
+          photo: res.header?.photo,
+          name: res.header?.name,
+          title: res.header?.title,
+          email: res.header?.email,
+          phone: res.header?.phone,
+          address: res.header?.address,
+          linkedin: res.header?.linkedin,
+          github: res.header?.github,
+        });
+      }
     });
   };
 
@@ -201,6 +208,16 @@ export const ResumeMakerScreen = () => {
     });
   };
 
+  const handleCancel = () => {
+    console.log("Cancel clicked");
+    setIsOpen(false);
+  };
+
+  const handleSure = () => {
+    deleteResume(location.state.cvId).then(() => navigate(Paths.main));
+    setIsOpen(false);
+  };
+
   return !isLoading ? (
     <div className="flex-1 w-screen h-full justify-items-center p-10 bg-blue-50  ">
       <div className={"fixed top-0 left-0 m-4 flex flex-col gap-5"}>
@@ -229,6 +246,15 @@ export const ResumeMakerScreen = () => {
           }
         >
           Add another section
+        </button>
+        <button
+          //
+          onClick={() => setIsOpen(true)}
+          className={
+            "bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-orange-600 w-fit"
+          }
+        >
+          Delete resume
         </button>
       </div>
 
@@ -353,6 +379,33 @@ export const ResumeMakerScreen = () => {
             ))}
         </div>
       </div>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
+          <dialog
+            open={true}
+            className="bg-white p-6 rounded-lg shadow-lg w-96"
+          >
+            <p className="text-lg font-medium text-gray-800 mb-8 text-center">
+              Do you really want to delete this resume? 😕
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                onClick={handleSure}
+              >
+                Sure
+              </button>
+            </div>
+          </dialog>
+        </div>
+      )}
     </div>
   ) : (
     <div>Loading...</div>
