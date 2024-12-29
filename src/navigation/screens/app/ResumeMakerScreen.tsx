@@ -1,19 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { deleteResume, getResume, setResume } from "../../../backend";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SectionModel } from "../../../constants";
-import { CustomDialog, ResumeHeader, ResumeSection } from "../../../components";
+import {
+  CustomDialog,
+  ResumeHeader,
+  ResumeSection,
+  FontDropdown,
+  ColorDropdown,
+} from "../../../components";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Paths } from "../../constants";
-import FontDropdown from "../../../components/FontDropdown";
-import ColorDropdown from "../../../components/ColorDropdown";
 
 export const ResumeMakerScreen = () => {
   const [header, setHeader] = useState({
@@ -26,22 +24,20 @@ export const ResumeMakerScreen = () => {
     linkedin: "",
     github: "",
   });
-
   const [sections, setSections] = useState<SectionModel[]>([]);
+  const [font, setFont] = useState("none");
+  const [color, setColor] = useState("blue");
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenFieldsEmpty, setIsOpenFieldsEmpty] = useState(false);
+  const [isOpenSuccess, setIsOpenSuccess] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [font, setFont] = useState("none");
-
-  const [color, setColor] = useState("blue");
-
   const location = useLocation();
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -99,9 +95,12 @@ export const ResumeMakerScreen = () => {
         font,
         color,
         body: sections,
-      }).then(() => setIsLoading(false));
+      }).then(() => {
+        setIsLoading(false);
+        setIsOpenSuccess(true);
+      });
     } else {
-      alert("Please fill all the fields");
+      setIsOpenFieldsEmpty(true);
     }
   };
 
@@ -220,16 +219,6 @@ export const ResumeMakerScreen = () => {
     });
   };
 
-  const handleCancel = () => {
-    console.log("Cancel clicked");
-    setIsOpen(false);
-  };
-
-  const handleSure = () => {
-    deleteResume(location.state.cvId).then(() => navigate(Paths.main));
-    setIsOpen(false);
-  };
-
   return !isLoading ? (
     <div className="flex-1 w-screen h-full justify-items-center p-10 bg-blue-50  ">
       <div className={"fixed top-0 left-0 m-4 flex flex-col gap-5"}>
@@ -316,8 +305,27 @@ export const ResumeMakerScreen = () => {
       {isOpen && (
         <CustomDialog
           text={"Do you really want to delete this resume? 😕"}
-          handleCancel={handleCancel}
-          handleSure={handleSure}
+          handleCancel={() => setIsOpen(false)}
+          handlePrimaryButton={() => {
+            deleteResume(location.state.cvId).then(() => navigate(Paths.main));
+            setIsOpen(false);
+          }}
+        />
+      )}
+
+      {isOpenFieldsEmpty && (
+        <CustomDialog
+          text={"Please fill all the fields 🫨"}
+          handlePrimaryButton={() => setIsOpenFieldsEmpty(false)}
+          primaryBtnText="Ok"
+        />
+      )}
+
+      {isOpenSuccess && (
+        <CustomDialog
+          text={"Resume saved successfully 🥳"}
+          handlePrimaryButton={() => setIsOpenSuccess(false)}
+          primaryBtnText="Ok"
         />
       )}
     </div>

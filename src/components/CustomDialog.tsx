@@ -3,11 +3,13 @@ import React from "react";
 export const CustomDialog = ({
   text,
   handleCancel,
-  handleSure,
+  handlePrimaryButton,
+  primaryBtnText,
 }: {
   text: string;
   handleCancel?: () => void;
-  handleSure?: () => void;
+  handlePrimaryButton?: () => void;
+  primaryBtnText?: string;
 }) => (
   <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
     <dialog open={true} className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -23,12 +25,12 @@ export const CustomDialog = ({
             Cancel
           </button>
         )}
-        {handleSure && (
+        {handlePrimaryButton && (
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            onClick={handleSure}
+            onClick={handlePrimaryButton}
           >
-            Sure
+            {primaryBtnText ?? "Sure"}
           </button>
         )}
       </div>

@@ -12,7 +12,7 @@ const fonts = [
   { fontName: "Default", fontValue: "none" },
 ];
 
-const FontDropdown = ({
+export const FontDropdown = ({
   value,
   setValue,
 }: {
@@ -87,5 +87,3 @@ const FontDropdown = ({
     </div>
   );
 };
-
-export default FontDropdown;
