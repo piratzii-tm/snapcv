@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { deleteResume, getResume, setResume } from "../../../backend";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
@@ -8,11 +8,12 @@ import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SectionModel } from "../../../constants";
-import { ResumeSection } from "../../../components";
-import { isEqual } from "lodash";
+import { CustomDialog, ResumeHeader, ResumeSection } from "../../../components";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Paths } from "../../constants";
+import FontDropdown from "../../../components/FontDropdown";
+import ColorDropdown from "../../../components/ColorDropdown";
 
 export const ResumeMakerScreen = () => {
   const [header, setHeader] = useState({
@@ -25,19 +26,22 @@ export const ResumeMakerScreen = () => {
     linkedin: "",
     github: "",
   });
+
   const [sections, setSections] = useState<SectionModel[]>([]);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [font, setFont] = useState("none");
+
+  const [color, setColor] = useState("blue");
+
   const location = useLocation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
-
-  const defaultImage = require("../../../resources/auth_bg_img.png");
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,6 +54,12 @@ export const ResumeMakerScreen = () => {
         console.log(Object.values(res.body), Object.values(res.body)[0]);
         const sects = Object.values(res.body).slice(0) as SectionModel[];
         setSections(sects);
+        if (res.font) {
+          setFont(res.font);
+        }
+        if (res.color) {
+          setColor(res.color);
+        }
         setHeader({
           photo: res.header?.photo,
           name: res.header?.name,
@@ -86,6 +96,8 @@ export const ResumeMakerScreen = () => {
           linkedin: header.linkedin,
           github: header.github,
         },
+        font,
+        color,
         body: sections,
       }).then(() => setIsLoading(false));
     } else {
@@ -248,7 +260,6 @@ export const ResumeMakerScreen = () => {
           Add another section
         </button>
         <button
-          //
           onClick={() => setIsOpen(true)}
           className={
             "bg-red-500 text-white py-2 px-4 rounded shadow-lg hover:bg-orange-600 w-fit"
@@ -258,153 +269,56 @@ export const ResumeMakerScreen = () => {
         </button>
       </div>
 
-      <div
-        className={
-          "flex flex-col self-end gap-2 min-h-[297mm] w-[210mm] bg-white"
-        }
-        id={"divToPrint"}
-      >
-        {/*TODO Move to a separate component*/}
-        {/*#region - ResumeHeader*/}
-        <div className={"flex gap-2 border-b-2 border-b-blue-900"}>
-          <div className={"flex items-start w-6/12"}>
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleImageChange}
-            />
-            <img
-              src={header.photo || defaultImage}
-              alt="Selected"
-              onClick={() => fileInputRef.current?.click()}
-              className="h-40 w-40 rounded-full mt-10 ml-10 mb-10"
-            />
-            <div className="flex flex-col mt-12 ml-10 mb-10">
-              <input
-                placeholder={"Name..."}
-                value={header.name}
-                onChange={(e) => setHeader({ ...header, name: e.target.value })}
-                className="text-3xl font-semibold text-blue-900"
-              />
-              <input
-                placeholder={"Job title..."}
-                value={header.title}
-                onChange={(e) =>
-                  setHeader({ ...header, title: e.target.value })
-                }
-                className="text-base text-gray-800 font-semibold"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col items-end w-6/12 mt-12 mr-10 mb-10 gap-3">
-            <div className="flex gap-3 flex-row items-center">
-              <input
-                placeholder={"Email..."}
-                value={header.email}
-                onChange={(e) =>
-                  setHeader({ ...header, email: e.target.value })
-                }
-                className="text-right text-lg text-gray-800"
-              />
-              <FontAwesomeIcon icon={faEnvelope} color={"#1f2937"} />
-            </div>
-            <div className="flex gap-3 flex-row items-center">
-              <input
-                placeholder={"Phone number..."}
-                value={header.phone}
-                onChange={(e) =>
-                  setHeader({ ...header, phone: e.target.value })
-                }
-                className="text-right text-lg text-gray-800"
-              />
-              <FontAwesomeIcon icon={faPhone} color={"#1f2937"} />
-            </div>
-            <div className="flex gap-3 flex-row items-center">
-              <input
-                placeholder={"Address..."}
-                value={header.address}
-                onChange={(e) =>
-                  setHeader({ ...header, address: e.target.value })
-                }
-                className="text-right text-lg text-gray-800"
-              />
-              <FontAwesomeIcon icon={faLocationDot} color={"#1f2937"} />
-            </div>
-            <div className="flex gap-3 flex-row items-center">
-              <input
-                placeholder={"Linkedin..."}
-                value={header.linkedin}
-                onChange={(e) =>
-                  setHeader({ ...header, linkedin: e.target.value })
-                }
-                className="text-right text-lg text-gray-800"
-              />
-              <FontAwesomeIcon icon={faLinkedin} color={"#1f2937"} />
-            </div>
-            <div className="flex gap-3 flex-row items-center">
-              <input
-                placeholder={"Github..."}
-                value={header.github}
-                onChange={(e) =>
-                  setHeader({ ...header, github: e.target.value })
-                }
-                className="text-right text-lg text-gray-8"
-              />
-              <FontAwesomeIcon icon={faGithub} color={"#1f2937"} />
-            </div>
-          </div>
+      <div>
+        <div className="flex flex-row gap-2 items-center">
+          <p className="text-xl font-semibold">Font:</p>
+          <FontDropdown value={font} setValue={setFont} />
+          <p className="text-xl font-semibold">Color:</p>
+          <ColorDropdown value={color} setValue={setColor} />
         </div>
-        {/*endregion*/}
-        <div className={"flex flex-row flex-wrap"}>
-          {sections.slice(1) &&
-            sections?.map((section, index) => (
-              <ResumeSection
-                key={section.id}
-                content={section}
-                updateSection={(updatedSection) => {
-                  const newSections = sections.map((sec) =>
-                    sec.id === section.id ? updatedSection : sec,
-                  );
-                  setSections(newSections);
-                }}
-                onDeleteSection={() => {
-                  const newSections = sections.filter(
-                    (sec) => sec.id !== section.id,
-                  );
-                  setSections(newSections);
-                }}
-              />
-            ))}
+        <div className={"h-4"}></div>
+        <div
+          className={`flex flex-col self-end gap-2 min-h-[297mm] w-[210mm] bg-white font-${font}`}
+          id={"divToPrint"}
+        >
+          <ResumeHeader
+            color={color}
+            fileInputRef={fileInputRef}
+            handleImageChange={handleImageChange}
+            header={header}
+            setHeader={setHeader}
+          />
+          <div className={"flex flex-row flex-wrap"}>
+            {sections.slice(1) &&
+              sections?.map((section, index) => (
+                <ResumeSection
+                  key={section.id}
+                  content={section}
+                  updateSection={(updatedSection) => {
+                    const newSections = sections.map((sec) =>
+                      sec.id === section.id ? updatedSection : sec,
+                    );
+                    setSections(newSections);
+                  }}
+                  onDeleteSection={() => {
+                    const newSections = sections.filter(
+                      (sec) => sec.id !== section.id,
+                    );
+                    setSections(newSections);
+                  }}
+                  textColor={color}
+                />
+              ))}
+          </div>
         </div>
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
-          <dialog
-            open={true}
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <p className="text-lg font-medium text-gray-800 mb-8 text-center">
-              Do you really want to delete this resume? 😕
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                onClick={handleSure}
-              >
-                Sure
-              </button>
-            </div>
-          </dialog>
-        </div>
+        <CustomDialog
+          text={"Do you really want to delete this resume? 😕"}
+          handleCancel={handleCancel}
+          handleSure={handleSure}
+        />
       )}
     </div>
   ) : (
