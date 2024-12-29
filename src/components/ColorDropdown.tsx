@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const ColorDropdown = ({
+export const ColorDropdown = ({
   value,
   setValue,
 }: {
@@ -81,5 +81,3 @@ const ColorDropdown = ({
     </div>
   );
 };
-
-export default ColorDropdown;
