@@ -13,6 +13,8 @@ export type InitializeResumeInstanceDto = {
     github: string;
     photo: string;
   };
+  font: string;
+  color: string;
   body: {};
 };
 export const initializeResumeInstance = async (cvId: string) => {

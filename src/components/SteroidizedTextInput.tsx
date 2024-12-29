@@ -16,12 +16,6 @@ export const SteroidizedTextInput = ({
 
   // Configuration options
   const theme = "snow";
-  const modules = {
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-    ],
-  };
   const placeholder = "Describe your experience, achievements and skills...";
   const formats = ["bold", "italic", "underline", "strike", "list", "script"];
 

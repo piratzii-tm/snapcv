@@ -11,10 +11,12 @@ export const ResumeSection = ({
   content,
   onDeleteSection,
   updateSection,
+  textColor,
 }: {
   content: SectionModel;
   onDeleteSection: () => void;
   updateSection: (section: SectionModel) => void;
+  textColor: string;
 }) => {
   const [section, setSection] = useState(content);
   const [editing, setEditing] = useState<boolean[]>([]);
@@ -43,9 +45,7 @@ export const ResumeSection = ({
         <input
           placeholder={"Section title ..."}
           value={section.title}
-          className={
-            "text-3xl font-bold pb-1 border-b-blue-900 border-b-2 w-full text-blue-900"
-          }
+          className={`text-3xl font-bold pb-1 border-b-${textColor}-900 border-b-2 w-full text-${textColor}-900`}
           onChange={(e) => {
             setSection({ ...section, title: e.target.value });
             updateSection({ ...section, title: e.target.value });
@@ -60,22 +60,25 @@ export const ResumeSection = ({
       </div>
       {section.subsections?.map((subsection, index) => (
         <div className={"mt-5"}>
-          <input
-            value={subsection.title}
-            onChange={(e) => onFieldChange({ title: e.target.value }, index)}
-            className={"text-2xl font-semibold text-blue-900"}
-          />
-          <FontAwesomeIcon
-            icon={faTrash}
-            color={"#444557"}
-            onClick={() => {
-              const newSubsections = section.subsections.filter(
-                (subsec) => subsec.id !== subsection.id,
-              ); // Exclude matching 'id'
-              setSection({ ...section, subsections: newSubsections });
-            }}
-            data-ignore="true"
-          />
+          <div className={"flex flex-row justify-center items-center gap-2"}>
+            <input
+              value={subsection.title}
+              onChange={(e) => onFieldChange({ title: e.target.value }, index)}
+              className={`text-2xl font-semibold text-${textColor}-900 w-full`}
+            />
+            <FontAwesomeIcon
+              icon={faTrash}
+              color={"#444557"}
+              onClick={() => {
+                const newSubsections = section.subsections.filter(
+                  (subsec) => subsec.id !== subsection.id,
+                ); // Exclude matching 'id'
+                setSection({ ...section, subsections: newSubsections });
+              }}
+              data-ignore="true"
+            />
+          </div>
+
           <div className={"pl-2 border-l-2 mt-2"}>
             <div className={"flex flex-row h-5"}>
               <DatePicker
