@@ -72,8 +72,12 @@ export const ResumeSection = ({
               onClick={() => {
                 const newSubsections = section.subsections.filter(
                   (subsec) => subsec.id !== subsection.id,
-                ); // Exclude matching 'id'
+                );
                 setSection({ ...section, subsections: newSubsections });
+                updateSection({
+                  ...section,
+                  subsections: newSubsections,
+                });
               }}
               data-ignore="true"
             />
